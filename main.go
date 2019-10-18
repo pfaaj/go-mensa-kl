@@ -22,8 +22,10 @@ func main() {
 	// Find and visit all links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
 		category := e.ChildText("div[class=c10l]")
-		fmt.Println(category)
-		fmt.Println(e.ChildText("h5"))
+		title := e.ChildText("div[class=c90r]")
+		fmt.Println("Title: " + title)
+		fmt.Println("Category: " + category)
+		fmt.Println("Date: " + e.ChildText("h5"))
 	})
 
 	c.OnRequest(func(r *colly.Request) {
