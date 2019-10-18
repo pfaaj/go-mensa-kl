@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"go-mensa/mensa"
+	"strings"
 	"time"
 
 	"github.com/mum4k/termdash"
@@ -46,7 +47,7 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 		select {
 		case <-ticker.C:
 			if err := t.Write(fmt.Sprintf("Date: %s\n\nCategory: %s\n\nMeal: %s\n\n",
-				plan[j].Date, plan[j].Categories[k], plan[j].Meals[i])); err != nil {
+				plan[j].Date, plan[j].Categories[k], strings.TrimLeft(plan[j].Meals[i], " "))); err != nil {
 				panic(err)
 			}
 			i = (i + 1) % len(plan[j].Meals)
