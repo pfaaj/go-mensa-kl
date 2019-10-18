@@ -1,4 +1,4 @@
-package main
+package mensa
 
 import (
 	"fmt"
@@ -10,10 +10,9 @@ import (
 
 // MensaPlan stores information about a mensa plan
 type MensaPlan struct {
-	Title    string
-	Category string
-	Prices   string
-	Date     string
+	Meals      []string
+	Categories []string
+	Date       string
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -33,7 +32,8 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 	return
 }
 
-func main() {
+//GetMensaPlan returns a mensa plan
+func GetMensaPlan() {
 	c := colly.NewCollector()
 
 	// Find and meal links

@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
-
+    "go-mensa/mensa"
 	"github.com/mum4k/termdash"
 	"github.com/mum4k/termdash/cell"
 	"github.com/mum4k/termdash/container"
@@ -67,6 +67,9 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 }
 
 func main() {
+
+	mensa.GetMensaPlan()
+	
 	t, err := termbox.New()
 	if err != nil {
 		panic(err)
