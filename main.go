@@ -48,8 +48,8 @@ func main() {
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
 		category := "Buffet"
-		title := e.ChildText("div[class=buffet-components]")
-		fmt.Println("Title: " + strings.TrimSpace(title))
+		title := e.ChildText("span[class]")
+		fmt.Printf("Dishes: %q ", title)
 		fmt.Println("Category: " + category)
 		fmt.Println("Description: " + e.ChildText("h5"))
 	})
