@@ -47,7 +47,7 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 		select {
 		case <-ticker.C:
 			quotations = plan[j].Meals
-			if err := t.Write(fmt.Sprintf("%s\n", quotations[i])); err != nil {
+			if err := t.Write(fmt.Sprintf("Date: %s\n\nMeal: %s\n\n", plan[j].Date, quotations[i])); err != nil {
 				panic(err)
 			}
 			i = (i + 1) % len(quotations)
@@ -120,7 +120,7 @@ func main() {
 	if err := rolled.Write("Rolls the content upwards if RollContent() option is provided.\nSupports keyboard and mouse scrolling.\n\n"); err != nil {
 		panic(err)
 	}
-	go writeLines(ctx, rolled, 1*time.Second)
+	go writeLines(ctx, rolled, 4*time.Second)
 
 	c, err := container.New(
 		t,
