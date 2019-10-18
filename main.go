@@ -8,10 +8,10 @@ import (
 
 // MensaPlan stores information about a mensa plan
 type MensaPlan struct {
-	Title  string
-	Type   string
-	Prices string
-	Date   string
+	Title    string
+	Category string
+	Prices   string
+	Date     string
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -21,6 +21,8 @@ func main() {
 
 	// Find and visit all links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
+		category := e.ChildText("div[class=c10l]")
+		fmt.Println(category)
 		fmt.Println(e.ChildText("h5"))
 	})
 
