@@ -17,8 +17,10 @@ type Plan struct {
 
 // Plans stores information about a mensa plan for a week with buffet
 type Plans struct {
-	Buffet   string
-	AllMeals []Plan
+	Buffet            string
+	BuffetDescription string
+	BuffetPrices      string
+	AllMeals          []Plan
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -40,7 +42,9 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.CacheDir("./cache"),
+	)
 
 	// Find and meal links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
@@ -64,6 +68,13 @@ func GetMensaPlan() (plans Plans) {
 		fmt.Println("Category: " + category)
 		fmt.Println("Description: " + e.ChildText("h5"))
 		plans.Buffet = dishes
+		if plans.BuffetDescription == "" {
+			plans.BuffetDescription = e.ChildText("h5")
+		}
+		if plans.BuffetPrices == "" {
+			plans.BuffetPrices = e.ChildText("div[class=c40r]")
+		}
+
 	})
 
 	c.OnRequest(func(r *colly.Request) {

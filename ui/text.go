@@ -106,6 +106,12 @@ func main() {
 	if err := wrapped.Write("Buffet: "+plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
+	if err := wrapped.Write("\n\nBuffet theme: "+plan.BuffetDescription, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+		panic(err)
+	}
+	if err := wrapped.Write("\n\nBuffet prices: "+plan.BuffetPrices, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+		panic(err)
+	}
 
 	rolled, err := text.New(text.RollContent(), text.WrapAtWords())
 	if err != nil {
