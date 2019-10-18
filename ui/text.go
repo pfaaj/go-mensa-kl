@@ -19,7 +19,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
     "go-mensa/mensa"
 	"github.com/mum4k/termdash"
@@ -31,34 +30,33 @@ import (
 	"github.com/mum4k/termdash/widgets/text"
 )
 
-// quotations are used as text that is rolled up in a text widget.
-var quotations = []string{
-	"When some see coincidence, I see consequence. When others see chance, I see cost.",
-	"You cannot pass....I am a servant of the Secret Fire, wielder of the flame of Anor. You cannot pass. The dark fire will not avail you, flame of Udûn. Go back to the Shadow! You cannot pass.",
-	"I'm going to make him an offer he can't refuse.",
-	"May the Force be with you.",
-	"The stuff that dreams are made of.",
-	"There's no place like home.",
-	"Show me the money!",
-	"I want to be alone.",
-	"I'll be back.",
-}
-
+var plan = mensa.GetMensaPlan()
+var quotations = []string {
+	  "a",
+	  "b",
+	  "c"}
+var i = 0
+var j = 0
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
 func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
-	s := rand.NewSource(time.Now().Unix())
-	r := rand.New(s)
 	ticker := time.NewTicker(delay)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ticker.C:
-			i := r.Intn(len(quotations))
+			quotations = plan[j].Meals
 			if err := t.Write(fmt.Sprintf("%s\n", quotations[i])); err != nil {
 				panic(err)
 			}
+			i = (i + 1) % len(quotations)
+			if i == len(quotations) - 1{
+				j = (j + 1) % len(plan)
+			}
+			if j == len(plan) - 1 {
+				i = 0
+			} 
 
 		case <-ctx.Done():
 			return
@@ -68,8 +66,8 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 
 func main() {
 
-	mensa.GetMensaPlan()
-	
+	fmt.Println(len(plan))
+
 	t, err := termbox.New()
 	if err != nil {
 		panic(err)
