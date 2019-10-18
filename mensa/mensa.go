@@ -8,11 +8,17 @@ import (
 	"github.com/gocolly/colly"
 )
 
-// MensaPlan stores information about a mensa plan
-type MensaPlan struct {
+// Plan stores information about a mensa plan for a day
+type Plan struct {
 	Meals      []string
 	Categories []string
 	Date       string
+}
+
+// Plans stores information about a mensa plan for a week with buffet
+type Plans struct {
+	Buffet   string
+	AllMeals []Plan
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -33,21 +39,21 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 }
 
 //GetMensaPlan returns a mensa plan
-func GetMensaPlan() (plans []MensaPlan) {
+func GetMensaPlan() (plans Plans) {
 	c := colly.NewCollector()
 
 	// Find and meal links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
 		category := e.ChildText("div[class=c10l]")
 		title := e.ChildText("div[class=c90r]")
-		var plan MensaPlan
+		var plan Plan
 		plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
 		fmt.Printf("Meals: %q \n", plan.Meals)
 		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
 		fmt.Printf("Categories: %q\n", plan.Categories)
 		plan.Date = e.ChildText("h5")
 		fmt.Println("Date: " + plan.Date)
-		plans = append(plans, plan)
+		plans.AllMeals = append(plans.AllMeals, plan)
 	})
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
@@ -57,6 +63,7 @@ func GetMensaPlan() (plans []MensaPlan) {
 		fmt.Printf("Dishes: %q ", dishes)
 		fmt.Println("Category: " + category)
 		fmt.Println("Description: " + e.ChildText("h5"))
+		plans.Buffet = dishes
 	})
 
 	c.OnRequest(func(r *colly.Request) {

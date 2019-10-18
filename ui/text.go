@@ -47,15 +47,15 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 		select {
 		case <-ticker.C:
 			if err := t.Write(fmt.Sprintf("Date: %s\n\nCategory: %s\n\nMeal: %s\n\n",
-				plan[j].Date, plan[j].Categories[k], strings.TrimLeft(plan[j].Meals[i], " "))); err != nil {
+				plan.AllMeals[j].Date, plan.AllMeals[j].Categories[k], strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
 				panic(err)
 			}
-			i = (i + 1) % len(plan[j].Meals)
-			k = (k + 1) % len(plan[j].Categories)
-			if i == len(plan[j].Meals)-1 {
-				j = (j + 1) % len(plan)
+			i = (i + 1) % len(plan.AllMeals[j].Meals)
+			k = (k + 1) % len(plan.AllMeals[j].Categories)
+			if i == len(plan.AllMeals[j].Meals)-1 {
+				j = (j + 1) % len(plan.AllMeals)
 			}
-			if j == len(plan)-1 {
+			if j == len(plan.AllMeals)-1 {
 				i = 0
 				k = 0
 			}
@@ -67,8 +67,6 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 }
 
 func main() {
-
-	fmt.Println(len(plan))
 
 	t, err := termbox.New()
 	if err != nil {
@@ -105,13 +103,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := wrapped.Write("Supports", text.WriteCellOpts(cell.FgColor(cell.ColorRed))); err != nil {
-		panic(err)
-	}
-	if err := wrapped.Write(" colors", text.WriteCellOpts(cell.FgColor(cell.ColorBlue))); err != nil {
-		panic(err)
-	}
-	if err := wrapped.Write(". Wraps long lines at rune boundaries if the WrapAtRunes() option is provided.\nSupports newline character to\ncreate\nnewlines\nmanually.\nTrims the content if it is too long.\n\n\n\nToo long."); err != nil {
+	if err := wrapped.Write("Buffet: "+plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
 
