@@ -15,8 +15,6 @@ type MensaPlan struct {
 	Date       string
 }
 
-
-
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
 
 func filterNonempty(ss []string, clean bool) (ret []string) {
@@ -37,7 +35,7 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans []MensaPlan) {
 	c := colly.NewCollector()
-    
+
 	// Find and meal links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
 		category := e.ChildText("div[class=c10l]")
@@ -55,7 +53,7 @@ func GetMensaPlan() (plans []MensaPlan) {
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
 		category := "Buffet"
 		dishes := e.ChildText("span[class]")
-	    //plan.Meals = append(plan.Meals, dishes)
+		//plan.Meals = append(plan.Meals, dishes)
 		fmt.Printf("Dishes: %q ", dishes)
 		fmt.Println("Category: " + category)
 		fmt.Println("Description: " + e.ChildText("h5"))
@@ -67,7 +65,6 @@ func GetMensaPlan() (plans []MensaPlan) {
 	})
 
 	c.Visit("https://www.studierendenwerk-kaiserslautern.de/kaiserslautern/essen-und-trinken/tu-kaiserslautern/mensa/")
-
 
 	return
 

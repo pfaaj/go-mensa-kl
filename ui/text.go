@@ -19,8 +19,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"go-mensa/mensa"
 	"time"
-    "go-mensa/mensa"
+
 	"github.com/mum4k/termdash"
 	"github.com/mum4k/termdash/cell"
 	"github.com/mum4k/termdash/container"
@@ -31,12 +32,10 @@ import (
 )
 
 var plan = mensa.GetMensaPlan()
-var quotations = []string {
-	  "a",
-	  "b",
-	  "c"}
 var i = 0
 var j = 0
+var k = 0
+
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
 func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
@@ -46,17 +45,19 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 	for {
 		select {
 		case <-ticker.C:
-			quotations = plan[j].Meals
-			if err := t.Write(fmt.Sprintf("Date: %s\n\nMeal: %s\n\n", plan[j].Date, quotations[i])); err != nil {
+			if err := t.Write(fmt.Sprintf("Date: %s\n\nCategory: %s\n\nMeal: %s\n\n",
+				plan[j].Date, plan[j].Categories[k], plan[j].Meals[i])); err != nil {
 				panic(err)
 			}
-			i = (i + 1) % len(quotations)
-			if i == len(quotations) - 1{
+			i = (i + 1) % len(plan[j].Meals)
+			k = (k + 1) % len(plan[j].Categories)
+			if i == len(plan[j].Meals)-1 {
 				j = (j + 1) % len(plan)
 			}
-			if j == len(plan) - 1 {
+			if j == len(plan)-1 {
 				i = 0
-			} 
+				k = 0
+			}
 
 		case <-ctx.Done():
 			return
@@ -117,9 +118,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := rolled.Write("Rolls the content upwards if RollContent() option is provided.\nSupports keyboard and mouse scrolling.\n\n"); err != nil {
-		panic(err)
-	}
+
 	go writeLines(ctx, rolled, 4*time.Second)
 
 	c, err := container.New(
@@ -159,7 +158,7 @@ func main() {
 			),
 			container.Right(
 				container.Border(linestyle.Light),
-				container.BorderTitle("Rolls and scrolls content wrapped at words"),
+				container.BorderTitle("Your Mensa Plan"),
 				container.PlaceWidget(rolled),
 			),
 		),
