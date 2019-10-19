@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"go-mensa/mensa"
+	"go-mensa/weather"
 	"strings"
 	"time"
 
@@ -32,6 +33,7 @@ import (
 	"github.com/mum4k/termdash/widgets/text"
 )
 
+var weatherInfo = weather.Info()
 var plan = mensa.GetMensaPlan()
 var i = 0
 var j = 0
@@ -91,7 +93,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := borderless.Write("Text without border."); err != nil {
+	if err := borderless.Write("Here your add."); err != nil {
 		panic(err)
 	}
 
@@ -107,7 +109,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := trimmed.Write("Trims lines that don't fit onto the canvas because they are too long for its width.."); err != nil {
+	if err := trimmed.Write(weather.Main(weatherInfo)); err != nil {
 		panic(err)
 	}
 
@@ -115,7 +117,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := wrapped.Write("Buffet: "+plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+	if err := wrapped.Write(plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
 	if err := wrapped.Write("\n\nBuffet theme: "+plan.BuffetDescription, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
@@ -159,14 +161,14 @@ func main() {
 							),
 							container.Bottom(
 								container.Border(linestyle.Light),
-								container.BorderTitle("Trims lines"),
+								container.BorderTitle("Weather KL"),
 								container.PlaceWidget(trimmed),
 							),
 						),
 					),
 					container.Bottom(
 						container.Border(linestyle.Light),
-						container.BorderTitle("Wraps lines at rune boundaries"),
+						container.BorderTitle("Buffet"),
 						container.PlaceWidget(wrapped),
 					),
 				),
