@@ -21,6 +21,7 @@ type Plans struct {
 	BuffetDescription string
 	BuffetPrices      string
 	AllMeals          []Plan
+	OpeningTimes      string
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -73,6 +74,14 @@ func GetMensaPlan() (plans Plans) {
 		}
 		if plans.BuffetPrices == "" {
 			plans.BuffetPrices = e.ChildText("div[class=c40r]")
+		}
+
+	})
+
+	c.OnHTML("div[class=widget]", func(e *colly.HTMLElement) {
+
+		if e.ChildText("h5[class=widget_header]") == "Öffnungszeiten" {
+			plans.OpeningTimes = e.ChildText("p[class=widget_list]")
 		}
 
 	})

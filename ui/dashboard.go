@@ -89,11 +89,11 @@ func main() {
 	defer t.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	borderless, err := text.New()
+	borderless, err := text.New(text.WrapAtRunes())
 	if err != nil {
 		panic(err)
 	}
-	if err := borderless.Write("Here your add."); err != nil {
+	if err := borderless.Write(plan.OpeningTimes); err != nil {
 		panic(err)
 	}
 
