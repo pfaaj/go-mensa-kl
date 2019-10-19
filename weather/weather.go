@@ -13,11 +13,11 @@ var key = "affc427170d00667a5a5381ac0fc8e70"
 //Main returns temp and humidity info
 func Main(w *openweathermap.CurrentWeatherData) (info string) {
 
-	info = fmt.Sprintf("Temperature: %f %s \n\n",
-		w.Main.Temp, w.Weather[0].Description)
+	info = fmt.Sprintf("Temperature: %d °C %s \n\n",
+		int(w.Main.Temp), w.Weather[0].Description)
 
-	info += fmt.Sprintf("Max temp: %f\n\nMin temp: %f\n\n",
-		w.Main.TempMax, w.Main.TempMin)
+	info += fmt.Sprintf("Max temp: %d °C\n\nMin temp: %d °C\n\n",
+		int(w.Main.TempMax), int(w.Main.TempMin))
 
 	return
 }

@@ -41,6 +41,10 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 	return
 }
 
+func insertRune(a []rune, x rune, i int) {
+	a = append(a[:i], append([]rune{x}, a[i:]...)...)
+}
+
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
 	c := colly.NewCollector(
@@ -81,7 +85,20 @@ func GetMensaPlan() (plans Plans) {
 	c.OnHTML("div[class=widget]", func(e *colly.HTMLElement) {
 
 		if e.ChildText("h5[class=widget_header]") == "Öffnungszeiten" {
-			plans.OpeningTimes = e.ChildText("p[class=widget_list]")
+
+			opening := e.ChildText("p[class=widget_list]")
+			//runes := []rune(opening)
+
+			/*for i := 0; i < len(runes)-1; i++ {
+				if runes[i] == '.' && unicode.IsLetter(runes[i+1]) {
+					insertRune(runes, '\n', i)
+				}
+			}*/
+			opening = strings.Replace(opening, ".B", ".\nB", -1)
+			opening = strings.Replace(opening, "rA", "r\nA", -1)
+			opening = strings.Replace(opening, "sv", "s v", -1)
+			opening = strings.Replace(opening, ":m", ": m", -1)
+			plans.OpeningTimes = opening
 		}
 
 	})

@@ -101,7 +101,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := unicode.Write("你好，世界!"); err != nil {
+	if err := unicode.Write(weather.Main(weatherInfo)); err != nil {
 		panic(err)
 	}
 
@@ -109,7 +109,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := trimmed.Write(weather.Main(weatherInfo)); err != nil {
+	if err := trimmed.Write("Pommes Grafik (stell dir vor)"); err != nil {
 		panic(err)
 	}
 
@@ -154,14 +154,14 @@ func main() {
 									),
 									container.Right(
 										container.Border(linestyle.Light),
-										container.BorderTitle("你好，世界!"),
+										container.BorderTitle("Weather KL"),
 										container.PlaceWidget(unicode),
 									),
 								),
 							),
 							container.Bottom(
 								container.Border(linestyle.Light),
-								container.BorderTitle("Weather KL"),
+								container.BorderTitle("Your add here"),
 								container.PlaceWidget(trimmed),
 							),
 						),
