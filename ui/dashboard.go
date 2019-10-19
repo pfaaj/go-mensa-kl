@@ -35,7 +35,9 @@ import (
 var plan = mensa.GetMensaPlan()
 var i = 0
 var j = 0
-var k = 0
+var cat = 0
+var date = ""
+var showNextDay = false
 
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
@@ -46,18 +48,28 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 	for {
 		select {
 		case <-ticker.C:
-			if err := t.Write(fmt.Sprintf("Date: %s\n\nCategory: %s\n\nMeal: %s\n\n",
-				plan.AllMeals[j].Date, plan.AllMeals[j].Categories[k], strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
-				panic(err)
-			}
-			i = (i + 1) % len(plan.AllMeals[j].Meals)
-			k = (k + 1) % len(plan.AllMeals[j].Categories)
-			if i == len(plan.AllMeals[j].Meals)-1 {
+
+			if showNextDay == true {
 				j = (j + 1) % len(plan.AllMeals)
-			}
-			if j == len(plan.AllMeals)-1 {
 				i = 0
-				k = 0
+				cat = 0
+				showNextDay = false
+
+				if err := t.Write(fmt.Sprintf("Date: %s\n\n",
+					plan.AllMeals[j].Date)); err != nil {
+					panic(err)
+				}
+			}
+
+			if i <= len(plan.AllMeals[j].Meals)-1 {
+				if err := t.Write(fmt.Sprintf("Category: %s\n\nMeal: %s\n\n",
+					plan.AllMeals[j].Categories[cat],
+					strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
+					panic(err)
+				}
+
+				i = (i + 1)
+				cat = (cat + 1) % len(plan.AllMeals[j].Categories)
 			}
 
 		case <-ctx.Done():
@@ -118,7 +130,11 @@ func main() {
 		panic(err)
 	}
 
-	go writeLines(ctx, rolled, 4*time.Second)
+	if err := rolled.Write(fmt.Sprintf("Date: %s\n\n",
+		plan.AllMeals[j].Date)); err != nil {
+		panic(err)
+	}
+	go writeLines(ctx, rolled, 500*time.Millisecond)
 
 	c, err := container.New(
 		t,
@@ -169,7 +185,11 @@ func main() {
 	quitter := func(k *terminalapi.Keyboard) {
 		if k.Key == 'q' || k.Key == 'Q' {
 			cancel()
+		} else if k.Key == 'n' || k.Key == 'N' {
+			rolled.Reset()
+			showNextDay = true
 		}
+
 	}
 
 	if err := termdash.Run(ctx, t, c, termdash.KeyboardSubscriber(quitter)); err != nil {
