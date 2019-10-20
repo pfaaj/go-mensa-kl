@@ -93,7 +93,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := borderless.Write(plan.OpeningTimes); err != nil {
+	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes); err != nil {
 		panic(err)
 	}
 
@@ -154,7 +154,7 @@ func main() {
 									),
 									container.Right(
 										container.Border(linestyle.Light),
-										container.BorderTitle("Weather KL"),
+										container.BorderTitle("Weather"),
 										container.PlaceWidget(unicode),
 									),
 								),

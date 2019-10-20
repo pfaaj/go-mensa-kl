@@ -89,13 +89,8 @@ func GetMensaPlan() (plans Plans) {
 			opening := e.ChildText("p[class=widget_list]")
 			//runes := []rune(opening)
 
-			/*for i := 0; i < len(runes)-1; i++ {
-				if runes[i] == '.' && unicode.IsLetter(runes[i+1]) {
-					insertRune(runes, '\n', i)
-				}
-			}*/
-			opening = strings.Replace(opening, ".B", ".\nB", -1)
-			opening = strings.Replace(opening, "rA", "r\nA", -1)
+			opening = strings.Replace(opening, ".B", ".\n\nB", -1)
+			opening = strings.Replace(opening, "rA", "r\n\nA", -1)
 			opening = strings.Replace(opening, "sv", "s v", -1)
 			opening = strings.Replace(opening, ":m", ": m", -1)
 			plans.OpeningTimes = opening
