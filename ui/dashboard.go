@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"go-mensa/mensa"
 	"go-mensa/weather"
-	"math/rand"
 	"strings"
 	"time"
 
@@ -42,6 +41,20 @@ var j = 0
 var cat = 0
 var date = ""
 var showNextDay = false
+
+func countPommesMeals(plan mensa.Plans) (int, int) {
+	total := 0
+	pommes := 0
+	for _, meals := range plan.AllMeals {
+		for _, meal := range meals.Meals {
+			if strings.Contains(meal, "Pommes") {
+				pommes = pommes + 1
+			}
+			total = total + 1
+		}
+	}
+	return total, pommes
+}
 
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
@@ -93,13 +106,12 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 // playBarChart sets the values for the bar chart and draws it
 // Exits when the context expires.
 func playBarChart(ctx context.Context, bc *barchart.BarChart) {
-	const max = 100
 	var values []int
-	for i := 0; i < 2; i++ {
-		values = append(values, int(rand.Int31n(max+1)))
-	}
+	total, pommes := countPommesMeals(plan)
+	values = append(values, pommes)
+	values = append(values, total-pommes)
 
-	if err := bc.Values(values, max); err != nil {
+	if err := bc.Values(values, total); err != nil {
 		panic(err)
 	}
 }

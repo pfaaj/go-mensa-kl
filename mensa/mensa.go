@@ -61,21 +61,14 @@ func GetMensaPlan() (plans Plans) {
 			meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
 			plan.Meals[i] = meal
 		}
-		//fmt.Printf("Meals: %q \n", plan.Meals)
 		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
-		//fmt.Printf("Categories: %q\n", plan.Categories)
 		plan.Date = e.ChildText("h5")
-		//fmt.Println("Date: " + plan.Date)
 		plans.AllMeals = append(plans.AllMeals, plan)
 	})
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
-		//category := "Buffet"
 		dishes := e.ChildText("span[class]")
-		//plan.Meals = append(plan.Meals, dishes)
-		//fmt.Printf("Dishes: %q ", dishes)
-		//fmt.Println("Category: " + category)
-		//fmt.Println("Description: " + e.ChildText("h5"))
+
 		plans.Buffet = dishes
 		if plans.BuffetDescription == "" {
 			plans.BuffetDescription = e.ChildText("h5")
@@ -93,7 +86,6 @@ func GetMensaPlan() (plans Plans) {
 		if e.ChildText("h5[class=widget_header]") == "Öffnungszeiten" {
 
 			opening := e.ChildText("p[class=widget_list]")
-			//runes := []rune(opening)
 
 			opening = strings.Replace(opening, ".B", ".\n\nB", -1)
 			opening = strings.Replace(opening, "rA", "r\n\nA", -1)
