@@ -148,10 +148,10 @@ func main() {
 			cell.ColorBlue,
 		}),
 		barchart.ShowValues(),
-		barchart.BarWidth(8),
+		barchart.BarWidth(12),
 		barchart.Labels([]string{
 			"Pommes",
-			"~Pommes",
+			"Ke Pommes",
 		}),
 	)
 
@@ -217,7 +217,7 @@ func main() {
 							),
 							container.Bottom(
 								container.Border(linestyle.Light),
-								container.BorderTitle("Lustige Grafik"),
+								container.BorderTitle("Pommesstatistik der Woche. Anzahl von Pommesgerichten"),
 								container.PlaceWidget(bc),
 							),
 						),
