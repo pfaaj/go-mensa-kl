@@ -57,6 +57,10 @@ func GetMensaPlan() (plans Plans) {
 		title := e.ChildText("div[class=c90r]")
 		var plan Plan
 		plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
+		for i, meal := range plan.Meals {
+			meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
+			plan.Meals[i] = meal
+		}
 		//fmt.Printf("Meals: %q \n", plan.Meals)
 		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
 		//fmt.Printf("Categories: %q\n", plan.Categories)

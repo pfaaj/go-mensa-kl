@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"go-mensa/mensa"
 	"go-mensa/weather"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -30,6 +31,7 @@ import (
 	"github.com/mum4k/termdash/linestyle"
 	"github.com/mum4k/termdash/terminal/termbox"
 	"github.com/mum4k/termdash/terminal/terminalapi"
+	"github.com/mum4k/termdash/widgets/barchart"
 	"github.com/mum4k/termdash/widgets/text"
 )
 
@@ -68,8 +70,12 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 				if category == "1" || category == "2" {
 					category = "Ausgabe " + category
 				}
-				if err := t.Write(fmt.Sprintf("%s\n\nMeal: %s\n\n",
-					category,
+				if err := t.Write(fmt.Sprintf("%s\n\n", category),
+					text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(255, 215, 0)))); err != nil {
+
+					panic(err)
+				}
+				if err := t.Write(fmt.Sprintf("%s\n\n",
 					strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
 					panic(err)
 				}
@@ -81,6 +87,20 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 		case <-ctx.Done():
 			return
 		}
+	}
+}
+
+// playBarChart sets the values for the bar chart and draws it
+// Exits when the context expires.
+func playBarChart(ctx context.Context, bc *barchart.BarChart) {
+	const max = 100
+	var values []int
+	for i := 0; i < bc.ValueCapacity(); i++ {
+		values = append(values, int(rand.Int31n(max+1)))
+	}
+
+	if err := bc.Values(values, max); err != nil {
+		panic(err)
 	}
 }
 
@@ -97,6 +117,34 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	bc, err := barchart.New(
+		barchart.BarColors([]cell.Color{
+			cell.ColorBlue,
+			cell.ColorRed,
+			cell.ColorYellow,
+			cell.ColorBlue,
+			cell.ColorGreen,
+			cell.ColorRed,
+		}),
+		barchart.ValueColors([]cell.Color{
+			cell.ColorRed,
+			cell.ColorYellow,
+			cell.ColorBlue,
+			cell.ColorGreen,
+			cell.ColorRed,
+			cell.ColorBlue,
+		}),
+		barchart.ShowValues(),
+		barchart.BarWidth(8),
+		barchart.Labels([]string{
+			"Pommes",
+			"Ke Pommes",
+		}),
+	)
+
+	playBarChart(ctx, bc)
+
 	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes); err != nil {
 		panic(err)
 	}
@@ -106,14 +154,6 @@ func main() {
 		panic(err)
 	}
 	if err := unicode.Write(weather.Main(weatherInfo)); err != nil {
-		panic(err)
-	}
-
-	trimmed, err := text.New()
-	if err != nil {
-		panic(err)
-	}
-	if err := trimmed.Write("Pommes Grafik (stell dir vor)"); err != nil {
 		panic(err)
 	}
 
@@ -166,7 +206,7 @@ func main() {
 							container.Bottom(
 								container.Border(linestyle.Light),
 								container.BorderTitle("Lustige Grafik"),
-								container.PlaceWidget(trimmed),
+								container.PlaceWidget(bc),
 							),
 						),
 					),
