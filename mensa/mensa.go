@@ -57,21 +57,21 @@ func GetMensaPlan() (plans Plans) {
 		title := e.ChildText("div[class=c90r]")
 		var plan Plan
 		plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
-		fmt.Printf("Meals: %q \n", plan.Meals)
+		//fmt.Printf("Meals: %q \n", plan.Meals)
 		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
-		fmt.Printf("Categories: %q\n", plan.Categories)
+		//fmt.Printf("Categories: %q\n", plan.Categories)
 		plan.Date = e.ChildText("h5")
-		fmt.Println("Date: " + plan.Date)
+		//fmt.Println("Date: " + plan.Date)
 		plans.AllMeals = append(plans.AllMeals, plan)
 	})
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
-		category := "Buffet"
+		//category := "Buffet"
 		dishes := e.ChildText("span[class]")
 		//plan.Meals = append(plan.Meals, dishes)
-		fmt.Printf("Dishes: %q ", dishes)
-		fmt.Println("Category: " + category)
-		fmt.Println("Description: " + e.ChildText("h5"))
+		//fmt.Printf("Dishes: %q ", dishes)
+		//fmt.Println("Category: " + category)
+		//fmt.Println("Description: " + e.ChildText("h5"))
 		plans.Buffet = dishes
 		if plans.BuffetDescription == "" {
 			plans.BuffetDescription = e.ChildText("h5")

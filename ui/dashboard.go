@@ -64,8 +64,12 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 			}
 
 			if i <= len(plan.AllMeals[j].Meals)-1 {
-				if err := t.Write(fmt.Sprintf("Category: %s\n\nMeal: %s\n\n",
-					plan.AllMeals[j].Categories[cat],
+				category := plan.AllMeals[j].Categories[cat]
+				if category == "1" || category == "2" {
+					category = "Ausgabe " + category
+				}
+				if err := t.Write(fmt.Sprintf("%s\n\nMeal: %s\n\n",
+					category,
 					strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
 					panic(err)
 				}
@@ -154,14 +158,14 @@ func main() {
 									),
 									container.Right(
 										container.Border(linestyle.Light),
-										container.BorderTitle("Weather"),
+										container.BorderTitle("Wetter"),
 										container.PlaceWidget(unicode),
 									),
 								),
 							),
 							container.Bottom(
 								container.Border(linestyle.Light),
-								container.BorderTitle("Your add here"),
+								container.BorderTitle("Lustige Grafik"),
 								container.PlaceWidget(trimmed),
 							),
 						),
@@ -175,7 +179,7 @@ func main() {
 			),
 			container.Right(
 				container.Border(linestyle.Light),
-				container.BorderTitle("Your Mensa Plan"),
+				container.BorderTitle("Dein Mensa Plan"),
 				container.PlaceWidget(rolled),
 			),
 		),
