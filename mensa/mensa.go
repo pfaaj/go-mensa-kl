@@ -79,6 +79,8 @@ func GetMensaPlan() (plans Plans) {
 		plans.Buffet = dishes
 		if plans.BuffetDescription == "" {
 			plans.BuffetDescription = e.ChildText("h5")
+			plans.BuffetDescription = strings.Replace(plans.BuffetDescription, ")", ")\n", -1)
+
 		}
 		if plans.BuffetPrices == "" {
 			plans.BuffetPrices = e.ChildText("div[class=c40r]")

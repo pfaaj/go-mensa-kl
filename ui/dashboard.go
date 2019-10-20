@@ -95,7 +95,7 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 	const max = 100
 	var values []int
-	for i := 0; i < bc.ValueCapacity(); i++ {
+	for i := 0; i < 2; i++ {
 		values = append(values, int(rand.Int31n(max+1)))
 	}
 
@@ -139,7 +139,7 @@ func main() {
 		barchart.BarWidth(8),
 		barchart.Labels([]string{
 			"Pommes",
-			"Ke Pommes",
+			"~Pommes",
 		}),
 	)
 
@@ -164,10 +164,10 @@ func main() {
 	if err := wrapped.Write(plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
-	if err := wrapped.Write("\n\nBuffet theme: "+plan.BuffetDescription, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+	if err := wrapped.Write("\n\nThema der Woche: "+plan.BuffetDescription, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
-	if err := wrapped.Write("\n\nBuffet prices: "+plan.BuffetPrices, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+	if err := wrapped.Write("\n\nPreise: "+plan.BuffetPrices, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
 
