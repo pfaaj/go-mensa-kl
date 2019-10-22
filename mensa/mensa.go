@@ -6,7 +6,17 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+
+	"encoding/json"
+
+	"time"
+
+	"io/ioutil"
 )
+
+type CrawlInfo struct {
+	CrawledAt time.Time
+}
 
 // Plan stores information about a mensa plan for a day
 type Plan struct {
@@ -41,12 +51,38 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 	return
 }
 
+func parseDate() {
+	layout := "2006-01-02T15:04:05.000Z"
+	str := "2014-11-12T11:45:26.371Z"
+	t, err := time.Parse(layout, str)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(t)
+}
+
 func insertRune(a []rune, x rune, i int) {
 	a = append(a[:i], append([]rune{x}, a[i:]...)...)
 }
 
+func writeInfo() {
+
+	info := CrawlInfo{}
+
+	info.CrawledAt = time.Now()
+
+	file, _ := json.MarshalIndent(info, "", " ")
+
+	_ = ioutil.WriteFile("info.json", file, 0644)
+
+}
+
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
+
+	writeInfo()
+
 	c := colly.NewCollector(
 		colly.CacheDir("./cache"),
 	)

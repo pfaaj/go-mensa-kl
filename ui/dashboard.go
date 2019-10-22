@@ -153,9 +153,10 @@ func main() {
 			"Pommes",
 			"Ke Pommes",
 		}),
+		
 	)
 
-	playBarChart(ctx, bc)
+    playBarChart(ctx, bc)
 
 	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes); err != nil {
 		panic(err)
@@ -217,7 +218,7 @@ func main() {
 							),
 							container.Bottom(
 								container.Border(linestyle.Light),
-								container.BorderTitle("Pommesstatistik der Woche. Anzahl von Pommesgerichten"),
+								container.BorderTitle("Statistik der Gerichte der Woche."),
 								container.PlaceWidget(bc),
 							),
 						),
