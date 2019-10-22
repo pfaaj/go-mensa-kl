@@ -27,27 +27,22 @@ func filterNonempty(ss []string, clean bool) (ret []string) {
 //ParseDate converts date string to time.Time
 func ParseDate(date string) time.Time {
 
-	var emptyDate time.Time
-
 	tokens := strings.Split(date, ",")
-	if len(tokens) <= 1 {
-		return emptyDate
-	}
 
 	tokens = strings.Split(tokens[1], ".")
 
-	year, err := strconv.Atoi(tokens[2])
+	year, err := strconv.Atoi(strings.TrimSpace(tokens[2]))
 
 	if err != nil {
 		panic(err)
 	}
-	month, err := strconv.Atoi(tokens[1])
+	month, err := strconv.Atoi(strings.TrimSpace(tokens[1]))
 
 	if err != nil {
 		panic(err)
 	}
 
-	day, err := strconv.Atoi(tokens[0])
+	day, err := strconv.Atoi(strings.TrimSpace(tokens[0]))
 
 	if err != nil {
 		panic(err)
@@ -56,6 +51,18 @@ func ParseDate(date string) time.Time {
 	t := time.Date(year, time.Month(month), day, 0, 0, 0, 651387237, time.UTC)
 
 	return t
+}
+
+//IsDateToday tells if date is today
+func IsDateToday(date string) bool {
+	t := ParseDate(date)
+	istoday := false
+	current := time.Now()
+	if t.Year() == current.Year() && t.Month() == current.Month() && t.Day() == current.Day() {
+		istoday = true
+	}
+
+	return istoday
 }
 
 func insertRune(a []rune, x rune, i int) {

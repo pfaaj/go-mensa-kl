@@ -101,7 +101,7 @@ func GetMensaPlan() (plans Plans) {
 
 	c.OnRequest(func(r *colly.Request) {
 		r.Headers.Set("User-Agent", agent)
-		fmt.Println("Visiting", r.URL)
+		fmt.Println("Visited", r.URL)
 	})
 
 	c.Visit("https://www.studierendenwerk-kaiserslautern.de/kaiserslautern/essen-und-trinken/tu-kaiserslautern/mensa/")

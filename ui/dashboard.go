@@ -118,6 +118,15 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 
 func main() {
 
+	//start showing the plan for the current day
+	for idx := 0; idx < len(plan.AllMeals); idx++ {
+		if mensa.IsDateToday(plan.AllMeals[idx].Date) {
+			j = idx
+			break
+		}
+
+	}
+
 	t, err := termbox.New()
 	if err != nil {
 		panic(err)
@@ -153,10 +162,9 @@ func main() {
 			"Pommes",
 			"Ke Pommes",
 		}),
-		
 	)
 
-    playBarChart(ctx, bc)
+	playBarChart(ctx, bc)
 
 	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes); err != nil {
 		panic(err)
@@ -193,12 +201,13 @@ func main() {
 		plan.AllMeals[j].Date)); err != nil {
 		panic(err)
 	}
+
 	go writeLines(ctx, rolled, 500*time.Millisecond)
 
 	c, err := container.New(
 		t,
 		container.Border(linestyle.Light),
-		container.BorderTitle("PRESS Q TO QUIT"),
+		container.BorderTitle("PRESS Q TO QUIT; N TO SEE NEXT DAY"),
 		container.SplitVertical(
 			container.Left(
 				container.SplitHorizontal(
