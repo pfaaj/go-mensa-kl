@@ -3,6 +3,8 @@ package mensa
 import (
 	"fmt"
 
+	"os"
+
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -14,6 +16,7 @@ import (
 	"io/ioutil"
 )
 
+//CrawlInfo stores info related to the scraping
 type CrawlInfo struct {
 	CrawledAt time.Time
 }
@@ -108,13 +111,17 @@ func getTime(str string) {
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
 
-	//writeInfo()
 	res := readInfo()
-	fmt.Println(res)
 
-	days := time.Now().Sub(res.CrawledAt).Hours() / 24
+	isoYear, isoWeek := time.Now().ISOWeek()
+	storedYear, storedWeek := res.CrawledAt.ISOWeek()
 
-	fmt.Printf("Days since last crawl %f\n", days)
+	if isoYear > storedYear || (isoYear == storedYear && isoWeek > storedWeek) {
+		//purge cache
+		os.RemoveAll("./cache")
+		//store new time of cache creation
+		writeInfo()
+	}
 
 	c := colly.NewCollector(
 		colly.CacheDir("./cache"),
