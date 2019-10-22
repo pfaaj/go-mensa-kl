@@ -9,11 +9,7 @@ import (
 
 	"github.com/gocolly/colly"
 
-	"encoding/json"
-
 	"time"
-
-	"io/ioutil"
 )
 
 //CrawlInfo stores info related to the scraping
@@ -38,75 +34,6 @@ type Plans struct {
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-
-func filterNonempty(ss []string, clean bool) (ret []string) {
-	for _, s := range ss {
-		noempty := strings.Replace(s, " ", "", -1)
-		if len(noempty) >= 1 {
-			if clean == true {
-				ret = append(ret, noempty)
-			} else {
-				ret = append(ret, s)
-			}
-
-		}
-	}
-	return
-}
-
-func parseDate() {
-	layout := "2006-01-02T15:04:05.000Z"
-	str := "2014-11-12T11:45:26.371Z"
-	t, err := time.Parse(layout, str)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(t)
-}
-
-func insertRune(a []rune, x rune, i int) {
-	a = append(a[:i], append([]rune{x}, a[i:]...)...)
-}
-
-func writeInfo() {
-
-	info := CrawlInfo{}
-
-	info.CrawledAt = time.Now()
-
-	file, _ := json.MarshalIndent(info, "", " ")
-
-	_ = ioutil.WriteFile("info.json", file, 0644)
-
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func readInfo() CrawlInfo {
-
-	dat, err := ioutil.ReadFile("info.json")
-	check(err)
-	str := string(dat)
-	res := CrawlInfo{}
-	json.Unmarshal([]byte(str), &res)
-
-	return res
-}
-
-func getTime(str string) {
-	layout := "2006-01-02T15:04:05.000Z"
-	t, err := time.Parse(layout, str)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(t)
-}
 
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
