@@ -78,10 +78,43 @@ func writeInfo() {
 
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func readInfo() CrawlInfo {
+
+	dat, err := ioutil.ReadFile("info.json")
+	check(err)
+	str := string(dat)
+	res := CrawlInfo{}
+	json.Unmarshal([]byte(str), &res)
+
+	return res
+}
+
+func getTime(str string) {
+	layout := "2006-01-02T15:04:05.000Z"
+	t, err := time.Parse(layout, str)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(t)
+}
+
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
 
-	writeInfo()
+	//writeInfo()
+	res := readInfo()
+	fmt.Println(res)
+
+	days := time.Now().Sub(res.CrawledAt).Hours() / 24
+
+	fmt.Printf("Days since last crawl %f\n", days)
 
 	c := colly.NewCollector(
 		colly.CacheDir("./cache"),
