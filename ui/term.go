@@ -466,7 +466,7 @@ func contLayout(w *widgets) ([]container.Option, error) {
 // rootID is the ID assigned to the root container.
 const rootID = "root"
 
-func main() {
+func showDemo() {
 	t, err := termbox.New(termbox.ColorMode(terminalapi.ColorMode256))
 	if err != nil {
 		panic(err)
