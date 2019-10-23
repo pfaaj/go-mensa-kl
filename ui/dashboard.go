@@ -124,7 +124,7 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 
 func main() {
 
-	flag.StringVar(&language, "lang", "", "Pass code of language to translate to")
+	flag.StringVar(&language, "lang", "de", "Pass code of language to translate to")
 
 	flag.Parse()
 
