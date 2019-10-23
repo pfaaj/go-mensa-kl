@@ -18,6 +18,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"go-mensa/mensa"
 	"go-mensa/weather"
@@ -90,8 +91,8 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 					panic(err)
 				}
 				meal := strings.TrimLeft(plan.AllMeals[j].Meals[i], " ")
-				if language == "en" {
-					meal = mensa.Translate(meal)
+				if language != "de" {
+					meal = strings.TrimLeft(mensa.Translate(meal, language), " ")
 				}
 
 				if err := t.Write(fmt.Sprintf("%s\n\n", meal)); err != nil {
@@ -122,6 +123,10 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 }
 
 func main() {
+
+	flag.StringVar(&language, "lang", "", "Pass code of language to translate to")
+
+	flag.Parse()
 
 	//start showing the plan for the current day
 	for idx := 0; idx < len(plan.AllMeals); idx++ {
@@ -189,8 +194,8 @@ func main() {
 	}
 
 	buffet := plan.Buffet
-	if language == "en" {
-		buffet = mensa.Translate(buffet)
+	if language != "de" {
+		buffet = mensa.Translate(buffet, language)
 	}
 
 	if err := wrapped.Write(buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
