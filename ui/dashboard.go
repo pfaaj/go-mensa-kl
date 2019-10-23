@@ -41,6 +41,7 @@ var j = 0
 var cat = 0
 var date = ""
 var showNextDay = false
+var language = "de"
 
 func countPommesMeals(plan mensa.Plans) (int, int) {
 	total := 0
@@ -88,8 +89,12 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 
 					panic(err)
 				}
-				if err := t.Write(fmt.Sprintf("%s\n\n",
-					strings.TrimLeft(plan.AllMeals[j].Meals[i], " "))); err != nil {
+				meal := strings.TrimLeft(plan.AllMeals[j].Meals[i], " ")
+				if language == "en" {
+					meal = mensa.Translate(meal)
+				}
+
+				if err := t.Write(fmt.Sprintf("%s\n\n", meal)); err != nil {
 					panic(err)
 				}
 
@@ -182,7 +187,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := wrapped.Write(plan.Buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
+
+	buffet := plan.Buffet
+	if language == "en" {
+		buffet = mensa.Translate(buffet)
+	}
+
+	if err := wrapped.Write(buffet, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
 		panic(err)
 	}
 	if err := wrapped.Write("\n\nThema der Woche: "+plan.BuffetDescription, text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(124, 252, 0)))); err != nil {
