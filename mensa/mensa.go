@@ -38,7 +38,15 @@ const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
 
-	res := readInfo()
+	res := CrawlInfo{}
+
+	if _, err := os.Stat("info.json"); err == nil {
+		res = readInfo()
+
+	} else if os.IsNotExist(err) {
+		writeInfo()
+		res = readInfo()
+	}
 
 	isoYear, isoWeek := time.Now().ISOWeek()
 	storedYear, storedWeek := res.CrawledAt.ISOWeek()
