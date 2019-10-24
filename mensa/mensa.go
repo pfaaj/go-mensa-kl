@@ -35,6 +35,20 @@ type Plans struct {
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
 
+func getMeals(e *colly.HTMLElement, plans *Plans) {
+	category := e.ChildText("div[class=c10l]")
+	title := e.ChildText("div[class=c90r]")
+	var plan Plan
+	plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
+	for i, meal := range plan.Meals {
+		meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
+		plan.Meals[i] = meal
+	}
+	plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
+	plan.Date = e.ChildText("h5")
+	plans.AllMeals = append(plans.AllMeals, plan)
+}
+
 //GetMensaPlan returns a mensa plan
 func GetMensaPlan() (plans Plans) {
 
@@ -62,19 +76,13 @@ func GetMensaPlan() (plans Plans) {
 		colly.CacheDir("./cache"),
 	)
 
+	//atrium := colly.NewCollector(
+	//	colly.CacheDir("./cache"),
+	//)
+
 	// Find and meal links
 	c.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
-		category := e.ChildText("div[class=c10l]")
-		title := e.ChildText("div[class=c90r]")
-		var plan Plan
-		plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
-		for i, meal := range plan.Meals {
-			meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
-			plan.Meals[i] = meal
-		}
-		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
-		plan.Date = e.ChildText("h5")
-		plans.AllMeals = append(plans.AllMeals, plan)
+		getMeals(e, &plans)
 	})
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {

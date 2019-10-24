@@ -3,3 +3,5 @@ main
 mensa.exe
 go-mensa
 ui/go-mensa
+cache/
+info.json
