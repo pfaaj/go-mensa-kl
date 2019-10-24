@@ -58,6 +58,33 @@ func countPommesMeals(plan mensa.Plans) (int, int) {
 	return total, pommes
 }
 
+//WriteMeals writes the meal infos to the text widget
+func WriteMeals(plan mensa.Plan, t *text.Text) {
+
+	if i <= len(plan.Meals)-1 {
+		category := plan.Categories[cat]
+		if category == "1" || category == "2" {
+			category = "Ausgabe " + category
+		}
+		if err := t.Write(fmt.Sprintf("%s\n\n", category),
+			text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(255, 215, 0)))); err != nil {
+
+			panic(err)
+		}
+		meal := strings.TrimLeft(plan.Meals[i], " ")
+		if language != "de" {
+			meal = strings.TrimLeft(mensa.Translate(meal, language), " ")
+		}
+
+		if err := t.Write(fmt.Sprintf("%s\n\n", meal)); err != nil {
+			panic(err)
+		}
+
+		i = (i + 1)
+		cat = (cat + 1) % len(plan.Categories)
+	}
+}
+
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
 func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
@@ -80,28 +107,7 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 				}
 			}
 
-			if i <= len(plan.AllMeals[j].Meals)-1 {
-				category := plan.AllMeals[j].Categories[cat]
-				if category == "1" || category == "2" {
-					category = "Ausgabe " + category
-				}
-				if err := t.Write(fmt.Sprintf("%s\n\n", category),
-					text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(255, 215, 0)))); err != nil {
-
-					panic(err)
-				}
-				meal := strings.TrimLeft(plan.AllMeals[j].Meals[i], " ")
-				if language != "de" {
-					meal = strings.TrimLeft(mensa.Translate(meal, language), " ")
-				}
-
-				if err := t.Write(fmt.Sprintf("%s\n\n", meal)); err != nil {
-					panic(err)
-				}
-
-				i = (i + 1)
-				cat = (cat + 1) % len(plan.AllMeals[j].Categories)
-			}
+			WriteMeals(plan.AllMeals[j], t)
 
 		case <-ctx.Done():
 			return
@@ -123,6 +129,8 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 }
 
 func main() {
+
+	fmt.Println(plan.AtriumMeals)
 
 	flag.StringVar(&language, "lang", "de", "Pass code of language to translate to")
 

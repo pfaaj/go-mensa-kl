@@ -7,6 +7,7 @@ import (
 
 	"strings"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 
 	"time"
@@ -30,33 +31,58 @@ type Plans struct {
 	BuffetDescription string
 	BuffetPrices      string
 	AllMeals          []Plan
+	AtriumMeals       []Plan
 	OpeningTimes      string
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
 
+// ChildTexts returns the stripped text content of all the matching
+// element's attributes.
+func ChildTexts(e *colly.HTMLElement, goquerySelector string) []string {
+	var res []string
+	e.DOM.Find(goquerySelector).Each(func(_ int, s *goquery.Selection) {
+
+		res = append(res, strings.TrimSpace(s.Text()))
+	})
+	return res
+}
+
 func getMeals(e *colly.HTMLElement, plans *Plans) {
 	category := e.ChildText("div[class=c10l]")
-	if strings.TrimSpace(category) == "" {
-		category = "Atrium"
-	}
 	title := e.ChildText("div[class=c90r]")
 	var plan Plan
 	plan.Meals = filterNonempty(strings.Split(title, "\n"), false)
-	if category == "Atrium" {
-		fmt.Println("Atrium: ")
-		fmt.Println(plan.Meals)
-		plan.Categories = append(plan.Categories, category)
-	} else {
-		plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
+	for i, meal := range plan.Meals {
+		meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
+		plan.Meals[i] = meal
 	}
+	plan.Categories = filterNonempty(strings.Split(category, "\n"), true)
+	plan.Date = e.ChildText("h5")
+	plans.AllMeals = append(plans.AllMeals, plan)
+}
+
+func getAtriumMeals(e *colly.HTMLElement, plans *Plans) {
+
+	var plan Plan
+
+	plan.Meals = ChildTexts(e, "div[class=c90r]")
+
+	fmt.Println("Atrium: ")
+
+	plan.Date = e.ChildText("h5")
+
+	for i := 0; i < len(plan.Meals); i++ {
+		plan.Categories = append(plan.Categories, "Atrium")
+	}
+
 	for i, meal := range plan.Meals {
 		meal = strings.Replace(meal, "Studenten", "\nStudenten", -1)
 		plan.Meals[i] = meal
 	}
 
-	plan.Date = e.ChildText("h5")
-	plans.AllMeals = append(plans.AllMeals, plan)
+	plans.AtriumMeals = append(plans.AtriumMeals, plan)
+
 }
 
 //GetMensaPlan returns a mensa plan
@@ -97,7 +123,7 @@ func GetMensaPlan() (plans Plans) {
 
 	// get atriums meals
 	atrium.OnHTML("div[class=dailyplan]", func(e *colly.HTMLElement) {
-		getMeals(e, &plans)
+		getAtriumMeals(e, &plans)
 	})
 
 	c.OnHTML("div[class=buffet]", func(e *colly.HTMLElement) {
