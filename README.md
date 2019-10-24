@@ -18,7 +18,7 @@ or use the -lang argument with any language code supported by the Yandex transla
 ./go-mensa -lang en # will translate the meal's text to English
 ```
 
-### Using latest code
+#### Using latest code
 
 If you want to run the latest code, clone this repo and install all dependencies recursively with the go get command: go to the main directory of the project and  run:
 
@@ -31,9 +31,9 @@ to run the dashboard go to ui/ and run
   go run dashboard.go
 ```  
 
-to run the dashboard go to ui/ and run
+to build the dashboard go to ui/ and run
 ```
-  go run dashboard.go
+  go build dashboard.go
 ```  
 
 ## Built With
