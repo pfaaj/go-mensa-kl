@@ -16,7 +16,6 @@ func Translate(str string, language string) (translated string) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(translation.Result())
 		translated = translation.Result()
 	}
 	return
