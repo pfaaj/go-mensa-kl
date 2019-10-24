@@ -137,9 +137,11 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 
 			WriteMeals(plan.AllMeals[j], t)
 
-			if i == len(plan.AllMeals[j].Meals)-1 {
+			if i == len(plan.AllMeals[j].Meals) {
 
 				WriteAtriumMeals(plan.AtriumMeals[j], t)
+
+				i++
 			}
 
 		case <-ctx.Done():
