@@ -68,8 +68,6 @@ func getAtriumMeals(e *colly.HTMLElement, plans *Plans) {
 
 	plan.Meals = ChildTexts(e, "div[class=c90r]")
 
-	fmt.Println("Atrium: ")
-
 	plan.Date = e.ChildText("h5")
 
 	for i := 0; i < len(plan.Meals); i++ {

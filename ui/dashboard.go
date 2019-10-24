@@ -85,6 +85,34 @@ func WriteMeals(plan mensa.Plan, t *text.Text) {
 	}
 }
 
+//WriteAtriumMeals writes the Atrium meal infos to the text widget
+func WriteAtriumMeals(day mensa.Plan, t *text.Text) {
+
+	category := "Atrium"
+
+	if err := t.Write(fmt.Sprintf("%s\n\n", category),
+		text.WriteCellOpts(cell.FgColor(cell.ColorRGB24(255, 215, 0)))); err != nil {
+
+		panic(err)
+	}
+
+	for idx := 0; idx < len(day.Meals); idx++ {
+
+		mealInfo := strings.TrimLeft(day.Meals[idx], " ")
+
+		if language != "de" {
+			mealInfo = strings.TrimLeft(mensa.Translate(mealInfo, language), " ")
+		}
+
+		if err := t.Write(fmt.Sprintf("%s\n\n", mealInfo)); err != nil {
+			panic(err)
+
+		}
+
+	}
+
+}
+
 // writeLines writes a line of text to the text widget every delay.
 // Exits when the context expires.
 func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
@@ -109,6 +137,11 @@ func writeLines(ctx context.Context, t *text.Text, delay time.Duration) {
 
 			WriteMeals(plan.AllMeals[j], t)
 
+			if i == len(plan.AllMeals[j].Meals)-1 {
+
+				WriteAtriumMeals(plan.AtriumMeals[j], t)
+			}
+
 		case <-ctx.Done():
 			return
 		}
@@ -129,8 +162,6 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 }
 
 func main() {
-
-	fmt.Println(plan.AtriumMeals)
 
 	flag.StringVar(&language, "lang", "de", "Pass code of language to translate to")
 
