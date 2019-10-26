@@ -5,3 +5,6 @@ go-mensa
 ui/go-mensa
 cache/
 info.json
+.cache
+ui/cache/45
+ui/cache/7e
