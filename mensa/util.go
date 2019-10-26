@@ -29,7 +29,9 @@ func ParseDate(date string) time.Time {
 
 	tokens := strings.Split(date, ",")
 
-	tokens = strings.Split(tokens[1], ".")
+	tokens = strings.Split(tokens[1], "-")
+
+	tokens = strings.Split(tokens[0], ".")
 
 	year, err := strconv.Atoi(strings.TrimSpace(tokens[2]))
 

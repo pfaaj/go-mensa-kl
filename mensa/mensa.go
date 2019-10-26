@@ -99,7 +99,10 @@ func GetMensaPlan() (plans Plans) {
 	isoYear, isoWeek := time.Now().ISOWeek()
 	storedYear, storedWeek := res.CrawledAt.ISOWeek()
 
-	if isoYear > storedYear || (isoYear == storedYear && isoWeek > storedWeek) {
+	weekday := time.Now().Weekday()
+
+	if isoYear > storedYear || (isoYear == storedYear && isoWeek > storedWeek) ||
+		(isoWeek == storedWeek && weekday.String() == "Saturday") {
 		//purge cache
 		os.RemoveAll("./cache")
 		//store new time of cache creation
