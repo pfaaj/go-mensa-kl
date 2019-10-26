@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-The easiest way to use go-mensa-kl is to download its latest binary release [go-mensa](https://gofile.io/?c=9sJ2Ki) (only Linux supported)
+The easiest way to use go-mensa-kl is to download its latest binary release [go-mensa](https://github.com/pfaaj/go-mensa-kl/releases) (only Linux supported)
 
 ### Usage example
 For retrieving the original meal plan, in German, run:
