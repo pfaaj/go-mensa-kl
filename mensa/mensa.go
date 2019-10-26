@@ -102,7 +102,8 @@ func GetMensaPlan() (plans Plans) {
 	weekday := time.Now().Weekday()
 
 	if isoYear > storedYear || (isoYear == storedYear && isoWeek > storedWeek) ||
-		(isoWeek == storedWeek && weekday.String() == "Saturday") {
+		(isoWeek == storedWeek && weekday.String() == "Saturday" &&
+			res.CrawledAt.Weekday().String() != "Saturday") {
 		//purge cache
 		os.RemoveAll("./cache")
 		//store new time of cache creation
@@ -152,6 +153,7 @@ func GetMensaPlan() (plans Plans) {
 			opening = strings.Replace(opening, "rA", "r\n\nA", -1)
 			opening = strings.Replace(opening, "sv", "s v", -1)
 			opening = strings.Replace(opening, ":m", ": m", -1)
+			strings.Replace(opening, "von", "\nvon", -1)
 			plans.OpeningTimes = opening
 		}
 
