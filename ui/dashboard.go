@@ -88,6 +88,9 @@ func WriteMeals(plan mensa.Plan, t *text.Text) {
 //WriteAtriumMeals writes the Atrium meal infos to the text widget
 func WriteAtriumMeals(day mensa.Plan, t *text.Text) {
 
+	if len(day.Meals) == 0 {
+		return
+	}
 	category := "Atrium"
 
 	if err := t.Write(fmt.Sprintf("%s\n\n", category),
