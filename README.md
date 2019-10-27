@@ -1,7 +1,10 @@
 # Go-mensa-kl
 > A terminal dashboard (and a crawler) for TUK Mensa's meal plan.
 
-![](gomensa.png)
+<p align="center">
+  <img src="gomensa.png">
+</p>
+
 
 ## About The Project
 
@@ -16,7 +19,7 @@ Go-Mensa-Kl gives you a single-view dashboard with:
  * Translated texts for the meals, which might be handy if you are not yet fluent in German (powered by Yandex)
 
  * Bar plot showing the number of meals in the week with and without fries (Pommes)
- 
+
 ## Getting Started
 
 The easiest way to use go-mensa-kl is to download its latest binary release [go-mensa](https://github.com/pfaaj/go-mensa-kl/releases) (only Linux supported)
