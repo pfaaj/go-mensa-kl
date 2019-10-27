@@ -1,6 +1,4 @@
 # Go-mensa-kl
-> A terminal dashboard (and a crawler) for TUK Mensa's meal plan.
-
 <p align="center">
   <img src="gomensa.png">
 </p>
