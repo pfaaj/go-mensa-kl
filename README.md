@@ -1,4 +1,3 @@
-# Go-mensa-kl
 <p align="center">
   <img src="gomensa.png">
 </p>
