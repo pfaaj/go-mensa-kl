@@ -168,6 +168,9 @@ func playBarChart(ctx context.Context, bc *barchart.BarChart) {
 
 func main() {
 
+	fmt.Print("Latest binary release: ")
+	fmt.Println(mensa.GetURLLatestRelease())
+
 	flag.StringVar(&language, "lang", "de", "Pass code of language to translate to")
 
 	flag.Parse()
