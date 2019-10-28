@@ -13,9 +13,10 @@ import (
 	"time"
 )
 
-//CrawlInfo stores info related to the scraping
+//CrawlInfo stores info related to scraping
 type CrawlInfo struct {
-	CrawledAt time.Time
+	CrawledAt     time.Time
+	LatestRelease string
 }
 
 // Plan stores information about a mensa plan for a day

@@ -77,6 +77,8 @@ func writeInfo() {
 
 	info.CrawledAt = time.Now()
 
+	info.LatestRelease = GetURLLatestRelease()
+
 	file, _ := json.MarshalIndent(info, "", " ")
 
 	_ = ioutil.WriteFile("info.json", file, 0644)
