@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/inconshreveable/go-update"
 )
@@ -51,14 +50,6 @@ func GetURLLatestRelease() string {
 
 //IsNewRelease returns true if there is a new binary release at github
 func IsNewRelease(release string) bool {
-	res := CrawlInfo{}
 
-	if _, err := os.Stat("info.json"); err == nil {
-		res = readInfo()
-
-	} else if os.IsNotExist(err) {
-		return true
-	}
-
-	return res.LatestRelease != release
+	return LatestRelease != release
 }
