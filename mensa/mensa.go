@@ -27,12 +27,13 @@ type Plan struct {
 
 // Plans stores information about a mensa plan for a week with buffet
 type Plans struct {
-	Buffet            string
-	BuffetDescription string
-	BuffetPrices      string
-	AllMeals          []Plan
-	AtriumMeals       []Plan
-	OpeningTimes      string
+	Buffet             string
+	BuffetDescription  string
+	BuffetPrices       string
+	AllMeals           []Plan
+	AtriumMeals        []Plan
+	OpeningTimes       string
+	AtriumOpeningTimes string
 }
 
 const agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -153,6 +154,25 @@ func GetMensaPlan() (plans Plans) {
 			opening = strings.Replace(opening, ":m", ": m", -1)
 			opening = strings.Replace(opening, "von", "\nvon", -1)
 			plans.OpeningTimes = opening
+		}
+
+	})
+
+	atrium.OnHTML("div[class=widget]", func(e *colly.HTMLElement) {
+
+		if e.ChildText("h5[class=widget_header]") == "Öffnungszeiten" {
+
+			elements := ChildTexts(e, "p[class=widget_list]")
+			opening := strings.Join(elements[:], "\n")
+
+			opening = strings.Replace(opening, ".B", ".\n\nB", -1)
+			opening = strings.Replace(opening, ".A", ".\nA", -1)
+			opening = strings.Replace(opening, "rA", "r\n\nA", -1)
+			opening = strings.Replace(opening, "rD", "r\nD", -1)
+
+			opening = strings.Replace(opening, ":m", ": m", -1)
+			opening = strings.Replace(opening, "von", " von", -1)
+			plans.AtriumOpeningTimes = opening
 		}
 
 	})

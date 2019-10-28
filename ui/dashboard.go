@@ -227,7 +227,7 @@ func main() {
 
 	playBarChart(ctx, bc)
 
-	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes); err != nil {
+	if err := borderless.Write("Öffnungszeiten:\n\n" + plan.OpeningTimes + "\n\n" + plan.AtriumOpeningTimes); err != nil {
 		panic(err)
 	}
 
