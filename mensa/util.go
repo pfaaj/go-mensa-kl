@@ -10,7 +10,7 @@ import (
 )
 
 //LatestRelease contains the url to the current release (change before deploying a new release to github)
-const LatestRelease = "https://github.com/pfaaj/go-mensa-kl/releases/download/0.5-beta/go-mensa"
+const LatestRelease = "https://github.com/pfaaj/go-mensa-kl/releases/download/0.5.1-beta/go-mensa"
 
 func filterNonempty(ss []string, clean bool) (ret []string) {
 	for _, s := range ss {
